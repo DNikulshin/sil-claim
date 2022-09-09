@@ -1,0 +1,11 @@
+     // const AllItems = await page.$$('.table_item') || {}
+    //     const countItems = (await page.$$('.table_item')).length || {}
+    //     console.log(countItems)
+    //    allItems.forEach( async (item, idx) => {
+    //     const itemId = await (await item.inn)
+    //     console.log(itemId)
+    //    const text = await (await item.getProperty('innerText')).jsonValue()
+    //    console.log('item :', idx, text)
+    //    test.push(text)
+    //     // const listItem = (await page.evaluate( data => data.innerText, tableDataItem))
+    //    }) 
