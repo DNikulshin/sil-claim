@@ -11,6 +11,20 @@
             background: rgba(238, 234, 238, 0.7)!important;
             box-shadow: 0 0 5px rgba(0,0,0,0.5)!important;
         }
+
+        .btn-accordion-active {
+            background: rgba(152, 229, 152, 0.8) !important;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5), 0 0 10px rgba(0,0,0,0.5)!important;
+        }
+        .accordion-body p:hover {
+            background: rgba(233, 222, 135, 0.5) !important;
+        }
+        @media (min-width: 678px) {
+            .btn-accordion:hover {
+                background: rgba(152, 229, 152, 0.8) !important;
+                box-shadow: 0 0 5px rgba(0,0,0,0.5), 0 0 10px rgba(0,0,0,0.5)!important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -18,15 +32,15 @@
         <div class="content mt-3">
         <% if(data.length === 0){ %>
             <h3 class="text-danger mt-5">Заявок нет!</h3>
-          <% } else{ %>  
+          <% } else{ %>
             <div class="bg-light p-2 text-center">Всего:&nbsp;<strong class="text-success"><%= data.length %></strong>&nbsp;записей</div>
-            <% for(var i=0; i < data.length; i++) { %>
+            <% for(let i = 0; i < data.length; i++) { %>
                 <div class="accordion my-2">
                     <div class="accordion-item">
                       <h2 class="accordion-header">
                         <button class="accordion-button btn-accordion collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#data-<%= data[i].itemId %>" aria-expanded="false" aria-controls="#data-<%= data[i].itemId %>">
                             <div class="content-btn d-flex flex-wrap">
-                            <p><strong class="text-secondary"><small class=" me-3">#<%= i+1 %></small><span class="text-info me-1"> id:</span>&nbsp;</strong><span><%= data[i].itemId %></span></p>
+                            <p><strong class="text-secondary"><small class=" me-3">#<%= i+1 %></small><span class="me-1"> id:</span>&nbsp;</strong><span class="text-primary"><%= data[i].itemId %></span></p>
                             <p>&nbsp;Адрес: <%= data[i].address %></p>
                             <p>&nbsp;Тип: <%= data[i].type %></p>
                         </div>
@@ -55,6 +69,16 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        const accordionButton = document.querySelector('.content')
+        const accordionButtonAll = document.querySelectorAll('.accordion-button')
+        accordionButtonAll.forEach( el => {
+           el.classList.remove('btn-accordion-active')
+            el.addEventListener('click', () => {
+                el.classList.toggle('btn-accordion-active')
+            })
+        })
+    </script>
 </body>
 </html>
 

@@ -1,4 +1,3 @@
-const { reset } = require('nodemon')
 const puppeteer = require('puppeteer')
 require('dotenv').config()
 const fs = require('fs').promises
@@ -24,12 +23,12 @@ const settings = {
     //executablePath: ''
 }
 
- async function startParse () {
+async function startParse () {
     try {
         const browser = await puppeteer.launch(settings)
         const page = await browser.newPage()
         const pathCookie = path.resolve(__dirname, './cookies.json')
-        if(!fsSync.existsSync(pathCookie)) {
+        if (!fsSync.existsSync(pathCookie)) {
             await page.goto('https://erp.silinet.net/oper/')
             await page.waitForSelector('#login_page_form', { visible: true, timeout: 0 })
             await page.click('input[name="username"]')
@@ -41,57 +40,51 @@ const settings = {
             await fs.writeFile(path.resolve(__dirname, './cookies.json'), JSON.stringify(cookies, null, 2))
             await page.goto(URL2)
             await page.content()
-    
-                 const allItems = await page.evaluate(() => {
-                    const replaceAllLineBraek = (el) => el.replaceAll('\n', ' ')
-                    const results = 
+
+            return await page.evaluate(() => {
+                const replaceAllLineBreak = (el) => el.replaceAll('\n', ' ')
+                const results =
                     Array.from(document.querySelectorAll('.table_item'))
-                    return results.map(result => {
+                return results.map(result => {
                     return {
                         itemId: result.querySelector('td:nth-child(2)').innerText,
                         itemIdLink: result.querySelector('td:nth-child(2) > a').href,
-                        type:  result.querySelector('td:nth-child(3)').innerText,
-                        createDate:  replaceAllLineBraek(result.querySelector('td:nth-child(4)').innerText),
-                        setDate: replaceAllLineBraek(result.querySelector('td:nth-child(5)').innerText),
-                        address:  replaceAllLineBraek(result.querySelector('td:nth-child(6)').innerText) || {},
-                        itemObject:  replaceAllLineBraek(result.querySelector('td:nth-child(7)').innerText) || {}
+                        type: result.querySelector('td:nth-child(3)').innerText,
+                        createDate: replaceAllLineBreak(result.querySelector('td:nth-child(4)').innerText),
+                        setDate: replaceAllLineBreak(result.querySelector('td:nth-child(5)').innerText),
+                        address: replaceAllLineBreak(result.querySelector('td:nth-child(6)').innerText) || {},
+                        itemObject: replaceAllLineBreak(result.querySelector('td:nth-child(7)').innerText) || {}
                     }
-                    })
-                 }) 
+                })
+            })
         }
 
-        const cookiesString = await fs.readFile(path.resolve(__dirname, './cookies.json'));
-        const setcookies = JSON.parse(cookiesString);
-        await page.setCookie(...setcookies);
-        await page.goto('https://erp.silinet.net/oper/')
-        await page.waitForSelector('#login_page_form', { visible: true, timeout: 0 })
+        const cookiesString = await fs.readFile(path.resolve(__dirname, './cookies.json'))
+        const setCookies = JSON.parse(cookiesString.toString())
+        await page.setCookie(...setCookies)
         await page.goto(URL2)
         await page.content()
-    
-        const allItems = await page.evaluate(() => {
-            const replaceAllLineBraek = (el) => el.replaceAll('\n', ' ')
-           const results = 
-           Array.from(document.querySelectorAll('.table_item'))
-           return results.map(result => {
-           return {
-               itemId: result.querySelector('td:nth-child(2)').innerText,
-               itemIdLink: result.querySelector('td:nth-child(2) > a').href,
-               type:  result.querySelector('td:nth-child(3)').innerText,
-               createDate:  replaceAllLineBraek(result.querySelector('td:nth-child(4)').innerText),
-               setDate: replaceAllLineBraek(result.querySelector('td:nth-child(5)').innerText),
-               address:  replaceAllLineBraek(result.querySelector('td:nth-child(6)').innerText) || '',
-               itemObject:  replaceAllLineBraek(result.querySelector('td:nth-child(7)').innerText) || '',
-               description: replaceAllLineBraek(result.querySelector('td:nth-child(8)').innerText) || '',
-               comments: replaceAllLineBraek(result.querySelector('td:nth-child(9)').innerText) || '',
-               labels:  replaceAllLineBraek(result.querySelector('td:nth-child(10)').innerText) || '',
-               executors:  replaceAllLineBraek(result.querySelector('td:nth-child(11)').innerText) || ''
-           }
-           })
-        }) 
+        return await page.evaluate(() => {
+            const replaceAllLineBreak = (el) => el.replaceAll('\n', ' ')
+            const results = Array.from(document.querySelectorAll('.table_item'))
+            return results.map(result => {
+                return {
+                    itemId: result.querySelector('td:nth-child(2)').innerText,
+                    itemIdLink: result.querySelector('td:nth-child(2) > a').href,
+                    type: result.querySelector('td:nth-child(3)').innerText,
+                    createDate: replaceAllLineBreak(result.querySelector('td:nth-child(4)').innerText),
+                    setDate: replaceAllLineBreak(result.querySelector('td:nth-child(5)').innerText),
+                    address: replaceAllLineBreak(result.querySelector('td:nth-child(6)').innerText) || '',
+                    itemObject: replaceAllLineBreak(result.querySelector('td:nth-child(7)').innerText) || '',
+                    description: replaceAllLineBreak(result.querySelector('td:nth-child(8)').innerText) || '',
+                    comments: replaceAllLineBreak(result.querySelector('td:nth-child(9)').innerText) || '',
+                    labels: replaceAllLineBreak(result.querySelector('td:nth-child(10)').innerText) || '',
+                    executors: replaceAllLineBreak(result.querySelector('td:nth-child(11)').innerText) || ''
+                }
+            })
+        })
 
-       return allItems
-
-    } catch (e) { 
+    } catch (e) {
         console.log(e)
     }
 }
